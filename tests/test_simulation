@@ -1,1 +1,36 @@
+import unittest
+import vpython as vp
+from src.main import CelestialBody, get_body_by_name, calculate_accelerations
+import warnings
 
+warnings.simplefilter("ignore", ResourceWarning)
+
+class TestSolarSystemSimulation(unittest.TestCase):
+
+    def setUp(self):
+        # Prepare a minimal system for testing
+        self.bodies = [
+            CelestialBody("S1", 1e24, vp.vector(0, 0, 0), vp.vector(0, 0, 0), 1, vp.color.white, False),
+            CelestialBody("S2", 1e24, vp.vector(1e8, 0, 0), vp.vector(0, 100, 0), 1, vp.color.white, False)
+        ]
+
+    def test_get_body_by_name(self):
+        body = get_body_by_name(self.bodies, "S1")
+        self.assertIsNotNone(body)
+        self.assertEqual(body.name, "S1")
+
+        missing_body = get_body_by_name(self.bodies, "NonExistent")
+        self.assertIsNone(missing_body)
+
+    def test_calculate_accelerations(self):
+        positions = [b.pos for b in self.bodies]
+        accels = calculate_accelerations(positions, self.bodies)
+
+        self.assertEqual(len(accels), 2)
+        # S2 should be attracted to S1 (negative x vector)
+        self.assertLess(accels[1].x, 0)
+        self.assertEqual(accels[1].y, 0)
+        self.assertEqual(accels[1].z, 0)
+
+if __name__ == "__main__":
+    unittest.main()
