@@ -1,0 +1,6 @@
+vpython
+astroquery
+astropy
+pandas
+numpy
+matplotlib
