@@ -1,0 +1,11 @@
+*.csv
+venv/
+env/
+.venv/
+*.pyc
+*.pyo
+*.pyd
+*pytest_cashe/
+.vscode/
+.idea/
+.DS_Store
