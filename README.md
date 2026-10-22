@@ -38,7 +38,7 @@ graph TD
     CSV --> ERR
     JPL -- "Astroquery (Referencyjne efemerydy)" --> ERR
     ERR --> PLT
-'''
+```
 ## 🛠️ Użyte Technologie
 
 Projekt został zbudowany z wykorzystaniem nowoczesnego stosu technologicznego w ekosystemie Pythona, podzielonego na logiczne warstwy:
