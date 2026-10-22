@@ -12,6 +12,7 @@ Projekt integruje się z systemem **NASA JPL Horizons**, pobierając rzeczywiste
 
 Poniższy schemat przedstawia przepływ danych i architekturę modułową aplikacji:
 
+```mermaid
 graph TD
     subgraph API ["Zewnętrzne API"]
         JPL[NASA JPL Horizons API]
@@ -37,7 +38,7 @@ graph TD
     CSV --> ERR
     JPL -- "Astroquery (Referencyjne efemerydy)" --> ERR
     ERR --> PLT
-
+'''
 ## 🛠️ Użyte Technologie
 
 Projekt został zbudowany z wykorzystaniem nowoczesnego stosu technologicznego w ekosystemie Pythona, podzielonego na logiczne warstwy:
