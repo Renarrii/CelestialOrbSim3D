@@ -1,18 +1,6 @@
-<div align="center">
-
-<img src="cleaned.png" alt="CelestialOrbSim3D Logo" width="500"/>
-
 # 🪐 CelestialOrbSim3D
 
 **Precyzyjny symulator grawitacyjny N-ciał z analizatorem trajektorii kosmicznych**
-
-</div>
-
-<p align="center">
-  <img src="Screenshot 2026-09-21 at 12.30.40.png" alt="Zrzut ekranu symulacji VPython" width="800"/>
-</p>
-
----
 
 ## 📖 O projekcie
 
