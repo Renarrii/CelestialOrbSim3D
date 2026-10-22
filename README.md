@@ -1,101 +1,102 @@
 # 🪐 CelestialOrbSim3D
 
-**Precyzyjny symulator grawitacyjny N-ciał z analizatorem trajektorii kosmicznych**
+**Precise N-body gravity simulator with a space trajectory analyzer**
 
-## 📖 O projekcie
+## 📖 About the project
 
-**CelestialOrbSim3D** to autorski symulator grawitacyjny stworzony w języku Python, służący do modelowania i wizualizacji trajektorii obiektów w Układzie Słonecznym. Projekt w sposób szczególny uwzględnia analizę lotu komety **3I/ATLAS**. Dzięki zastosowaniu numerycznej metody całkowania **Rungego-Kutty 4. rzędu (RK4)**, symulator rozwiązuje problem N-ciał, minimalizując błędy numeryczne podczas bliskich przelotów (np. w układzie Ziemia-Księżyc). 
+**CelestialOrbSim3D** is a custom gravity simulator created in Python, designed for modeling and visualizing the trajectories of objects in the Solar System. The project specifically focuses on analyzing the flight of the **3I/ATLAS** comet. By utilizing the **4th-order Runge-Kutta (RK4)** numerical integration method, the simulator solves the N-body problem, minimizing numerical errors during close flybys (e.g., in the Earth-Moon system). 
 
-Projekt integruje się z systemem **NASA JPL Horizons**, pobierając rzeczywiste efemerydy obiektów w celu inicjalizacji stanu początkowego oraz późniejszej weryfikacji precyzji obliczeń.
+The project integrates with the **NASA JPL Horizons** system, fetching real object ephemerides to initialize the starting state and subsequently verify calculation precision.
 
-## 🏗️ Architektura Systemu
+## 🏗️ System Architecture
 
-Poniższy schemat przedstawia przepływ danych i architekturę modułową aplikacji:
+The diagram below illustrates the data flow and the modular architecture of the application:
 
 ```mermaid
 graph TD
-    subgraph API ["Zewnętrzne API"]
+    subgraph API ["External API"]
         JPL[NASA JPL Horizons API]
     end
 
-    subgraph Symulator ["Symulator (src/main.py)"]
-        INIT[Inicjalizacja Stanu<br/>Pozycje i Prędkości]
-        RK4[Silnik Fizyczny RK4<br/>Całkowanie Numeryczne]
-        3D[VPython 3D Engine<br/>Wizualizacja na żywo]
+    subgraph Simulator ["Simulator (src/main.py)"]
+        INIT[State Initialization<br/>Positions and Velocities]
+        RK4[RK4 Physics Engine<br/>Numerical Integration]
+        3D[VPython 3D Engine<br/>Live Visualization]
     end
 
-    subgraph Analiza ["Analiza i Raportowanie (src/compare_orbit.py)"]
-        CSV[(Wyniki Symulacji<br/>atlas_simulated_trajectory_rk4.csv)]
-        ERR[Obliczanie błędu euklidesowego]
-        PLT[Wizualizacja Błędów<br/>Matplotlib]
+    subgraph Analysis ["Analysis and Reporting (src/compare_orbit.py)"]
+        CSV[(Simulation Results<br/>atlas_simulated_trajectory_rk4.csv)]
+        ERR[Euclidean error calculation]
+        PLT[Error Visualization<br/>Matplotlib]
     end
 
-    JPL -- "Astroquery (Początkowe wektory)" --> INIT
+    JPL -- "Astroquery (Initial vectors)" --> INIT
     INIT --> RK4
-    RK4 -- "Aktualizacja klatek" --> 3D
-    RK4 -- "Eksport co N kroków" --> CSV
+    RK4 -- "Frame update" --> 3D
+    RK4 -- "Export every N steps" --> CSV
     
     CSV --> ERR
-    JPL -- "Astroquery (Referencyjne efemerydy)" --> ERR
+    JPL -- "Astroquery (Reference ephemerides)" --> ERR
     ERR --> PLT
 ```
-## 🛠️ Użyte Technologie
 
-Projekt został zbudowany z wykorzystaniem nowoczesnego stosu technologicznego w ekosystemie Pythona, podzielonego na logiczne warstwy:
+## 🛠️ Technologies Used
 
-*   **Fizyka i Silnik Obliczeniowy:**
-    *   `Python 3` z silnym typowaniem statycznym (`typing`).
-    *   Algorytm **Rungego-Kutty 4. rzędu (RK4)** do precyzyjnego wyliczania przyspieszeń i wektorów ruchu.
-*   **Zarządzanie Danymi i API:**
-    *   `astroquery` (moduł `jplhorizons`) – bezpośrednia integracja z bazami NASA, pobieranie wektorów stanu (pozycja, prędkość) w jednostkach astronomicznych (AU).
-    *   `pandas` & `numpy` – wysokowydajne przetwarzanie szeregów czasowych, mapowanie dat i szybkie wektorowe obliczenia dystansu euklidesowego.
-*   **Wizualizacja (Frontend):**
-    *   `vpython` – renderowanie trójwymiarowej sceny Układu Słonecznego w czasie rzeczywistym, śledzenie trajektorii obiektów.
-    *   `matplotlib` – generowanie analitycznych wykresów 2D (kumulacja błędu w kilometrach) oraz statycznych zestawień 3D (symulacja vs rzeczywistość).
-*   **Zapewnienie Jakości (QA):**
-    *   `unittest` – wbudowany framework do testów jednostkowych, izolujący i weryfikujący logikę matematyczną oraz fizyczną (kierunki wektorów sił).
+The project was built using a modern technology stack within the Python ecosystem, divided into logical layers:
 
-## 📂 Struktura Katalogów
+-   **Physics and Computational Engine:**
+    *   `Python 3` with strong static typing (`typing`).
+    *   **4th-order Runge-Kutta (RK4)** algorithm for precise calculation of accelerations and motion vectors.
+-   **Data and API Management:**
+    *   `astroquery` (`jplhorizons` module) – direct integration with NASA databases, fetching state vectors (position, velocity) in astronomical units (AU).
+    *   `pandas` & `numpy` – high-performance processing of time series, date mapping, and fast vectorized Euclidean distance calculations.
+-   **Visualization (Frontend):**
+    *   `vpython` – rendering a three-dimensional scene of the Solar System in real-time, tracking object trajectories.
+    *   `matplotlib` – generating 2D analytical charts (error accumulation in kilometers) and static 3D comparisons (simulation vs reality).
+-   **Quality Assurance (QA):**
+    *   `unittest` – built-in unit testing framework, isolating and verifying mathematical and physical logic (force vector directions).
 
-Projekt zachowuje czysty podział na kod źródłowy i testy:
+## 📂 Directory Structure
+
+The project maintains a clean separation between source code and tests:
 
 ```text
 📦 CelestialOrbSim3D
  ┣ 📂 src
- ┃ ┣ 📜 main.py                  # Główna pętla symulacji, silnik 3D (vpython) i implementacja RK4
- ┃ ┗ 📜 compare_orbit.py         # Narzędzie weryfikacji precyzji: Porównanie CSV z danymi z JPL
+ ┃ ┣ 📜 main.py                  # Main simulation loop, 3D engine (vpython) and RK4 implementation
+ ┃ ┗ 📜 compare_orbit.py         # Precision verification tool: Compares CSV with JPL data
  ┣ 📂 tests
- ┃ ┣ 📜 test_simulation.py       # Testy jednostkowe logiki fizycznej i wyszukiwania obiektów
- ┃ ┗ 📜 test_compare.py          # Weryfikacja matematyczna modułu analizy błędów trajektorii
- ┣ 📜 atlas_simulated_trajectory_rk4.csv # (Generowany automatycznie) Logi z przebiegu symulacji
+ ┃ ┣ 📜 test_simulation.py       # Unit tests for physics logic and object searching
+ ┃ ┗ 📜 test_compare.py          # Mathematical verification of the trajectory error analysis module
+ ┣ 📜 atlas_simulated_trajectory_rk4.csv # (Auto-generated) Simulation run logs
  ┗ 📜 README.md
 ```
 
-## 🚀 Uruchomienie Projektu
+## 🚀 Running the Project
 
-### 1. Instalacja zależności
+### 1. Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 2. Uruchomienie Symulacji 3D
-Uruchom główny skrypt, aby rozpocząć całkowanie i wyrenderować wizualizację. Proces będzie zapisywał pozycje komety do pliku CSV co 100 kroków symulacji.
+### 2. Run 3D Simulation
+Run the main script to start the integration and render the visualization. The process will save the comet's positions to a CSV file every 100 simulation steps.
 
 ```bash
 python src/main.py
 ```
-*Uwaga: Symulację można przerwać w dowolnym momencie za pomocą `Ctrl+C`, co spowoduje bezpieczne zapisanie i zamknięcie pliku CSV.*
+*Note: The simulation can be interrupted at any time using `Ctrl+C`, which will safely save and close the CSV file.*
 
-### 3. Analiza Błędów
-Po wygenerowaniu pliku `atlas_simulated_trajectory_rk4.csv`, uruchom skrypt analityczny. Pobierze on rzeczywiste dane z JPL dla odpowiadających ram czasowych i wygeneruje wykresy błędów:
+### 3. Error Analysis
+After generating the `atlas_simulated_trajectory_rk4.csv` file, run the analytical script. It will fetch real data from JPL for the corresponding timeframes and generate error charts:
 
 ```bash
 python src/compare_orbit.py
 ```
 
-### 4. Testy Jednostkowe
-Aby upewnić się, że cała logika matematyczna działa poprawnie, uruchom pakiet testów:
+### 4. Unit Tests
+To ensure all mathematical logic works correctly, run the test suite:
 
 ```bash
 python -m unittest discover -s tests
