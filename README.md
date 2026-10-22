@@ -12,19 +12,18 @@ Projekt integruje się z systemem **NASA JPL Horizons**, pobierając rzeczywiste
 
 Poniższy schemat przedstawia przepływ danych i architekturę modułową aplikacji:
 
-```mermaid
 graph TD
-    subgraph Zewnętrzne API
+    subgraph API ["Zewnętrzne API"]
         JPL[NASA JPL Horizons API]
     end
 
-    subgraph Symulator (src/main.py)
+    subgraph Symulator ["Symulator (src/main.py)"]
         INIT[Inicjalizacja Stanu<br/>Pozycje i Prędkości]
         RK4[Silnik Fizyczny RK4<br/>Całkowanie Numeryczne]
         3D[VPython 3D Engine<br/>Wizualizacja na żywo]
     end
 
-    subgraph Analiza i Raportowanie (src/compare_orbit.py)
+    subgraph Analiza ["Analiza i Raportowanie (src/compare_orbit.py)"]
         CSV[(Wyniki Symulacji<br/>atlas_simulated_trajectory_rk4.csv)]
         ERR[Obliczanie błędu euklidesowego]
         PLT[Wizualizacja Błędów<br/>Matplotlib]
@@ -38,7 +37,6 @@ graph TD
     CSV --> ERR
     JPL -- "Astroquery (Referencyjne efemerydy)" --> ERR
     ERR --> PLT
-```
 
 ## 🛠️ Użyte Technologie
 
